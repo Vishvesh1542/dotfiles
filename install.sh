@@ -7,8 +7,6 @@ DEST_DIR="$HOME/.files"
 
 echo "--- Preparing installation ---"
 
-mkdir -p "$HOME/.files"
-
 if [ ! -d "$DEST_DIR" ]; then
     echo "Cloning repository to $DEST_DIR..."
     git clone "$REPO_URL" "$DEST_DIR" .
