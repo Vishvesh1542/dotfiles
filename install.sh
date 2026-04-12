@@ -7,12 +7,8 @@ DEST_DIR="$HOME/.files"
 
 echo "--- Preparing installation ---"
 
-if [ ! -d "$DEST_DIR" ]; then
-    echo "Cloning repository to $DEST_DIR..."
-    git clone "$REPO_URL" "$DEST_DIR" .
-else
-    echo "Directory $DEST_DIR already exists. Skipping clone."
-fi
+echo "Cloning repository to $DEST_DIR..."
+git clone "$REPO_URL" "$DEST_DIR" .
 
 cd "$DEST_DIR"
 
