@@ -56,7 +56,7 @@ install-apps: install-tools
     common_apps = ["fastfetch", "nvim",
         "adw-gtk-theme", "flatpak", "openrgb", "nautilus", "ghostty"]
 
-    yay_apps = ["swaylock-effects-improved-git", "vicinae-bin",
+    yay_apps = ["swaylock-effects-improved-git", "vicinae-bin", "morewaita-icon-theme",
         "awww-bin", "envycontrol", "opentabletdriver", "zen-browser-bin"]
 
     for app in de_tools + common_apps:
@@ -76,6 +76,22 @@ set-tweaks:
     sudo flatpak mask org.gtk.Gtk3theme.adw-gtk3-dark
     gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+
+    @just install-moredwaita
+
+install-moredwaita:
+    #!/usr/bin/env python3
+    import os
+    import subprocess
+    import tempfile
+    # We don't have Adwaita colors
+    if not os.path.isdir("/usr/share/icons/Adwaita-blue"):
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            subprocess.run(["git", "clone", "https://github.com/dpejoh/Adwaita-colors"],
+                cwd=tmp_dir, check=True)
+            print(tmp_dir)
+            subprocess.run(["sudo", "./setup", "-i"], cwd=tmp_dir + "/Adwaita-colors", check=True)
+            subprocess.run(["sudo", "./morewaita.sh"], cwd=tmp_dir + "/Adwaita-colors", check=True)
 
 install-tools:
     @sudo pacman -S --noconfirm --needed python base-devel git fish
