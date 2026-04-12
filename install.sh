@@ -7,10 +7,11 @@ DEST_DIR="$HOME/.files"
 
 echo "--- Preparing installation ---"
 
+mkdir -p "$HOME/.files"
+cd "$DEST_DIR"
+
 echo "Cloning repository to $DEST_DIR..."
 git clone "$REPO_URL" "$DEST_DIR" .
-
-cd "$DEST_DIR"
 
 if ! command -v just &> /dev/null; then
     sudo pacman -S just
