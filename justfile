@@ -78,12 +78,8 @@ set-tweaks:
     gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
 
 install-tools:
-    @sudo pacman -S --noconfirm --needed python
-    @sudo pacman -S --noconfirm --needed base-devel
-    @sudo pacman -S --noconfirm --needed git
-    @sudo pacman -S --noconfirm --needed fish
-
-    chsh -s /bin/fish
+    @sudo pacman -S --noconfirm --needed python base-devel git fish
+    @sudo chsh -s /bin/fish $(USER)
 
     @command -v yay >/dev/null 2>&1 || ( \
             git clone https://aur.archlinux.org/yay.git /tmp/yay && \
