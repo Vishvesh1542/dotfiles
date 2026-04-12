@@ -4,6 +4,7 @@ list:
     @just --choose
 
 install-dotfiles:
+    mkdir -p "$HOME/.config"
     @just link-app "fastfetch"
     @just link-app "niri"
     @just link-app "fish"
@@ -31,7 +32,7 @@ uninstall-dotfiles:
     @just unlink-app "scripts"
     @just unlink-app "zenith"
 
-setup-computer: install-dotfiles install-venv-for-bar install-apps hide-bloat-apps set-tweaks
+setup-computer: install-dotfiles install-apps install-venv-for-bar hide-bloat-apps set-tweaks
 
 install-apps: install-tools
     #!/bin/env python3
