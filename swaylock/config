@@ -1,0 +1,51 @@
+# THIS FILE was completely AI generated
+# I need to make a better lock screen soon
+
+# General visual effects
+screenshots
+clock
+indicator
+indicator-radius=120
+indicator-thickness=12
+effect-blur=10x15
+effect-vignette=0.5:0.5
+
+# GNOME Grey Palette (Adwaita Grayscale)
+# Background (Dark Charcoal)
+color=1e1e1e
+
+# Default State (Medium Grey)
+ring-color=505050
+inside-color=00000000
+
+# Typing State (Light Grey)
+key-hl-color=d6d6d6
+bs-hl-color=9a9a9a
+
+# Verifying State (Pure White)
+ring-ver-color=ffffff
+inside-ver-color=00000000
+text-ver-color=ffffff
+
+# Wrong/Error State (Dark Grey - subtle "fail" look)
+ring-wrong-color=333333
+inside-wrong-color=00000000
+text-wrong-color=9a9a9a
+
+# Clear State (Back to Medium)
+ring-clear-color=777777
+inside-clear-color=00000000
+text-clear-color=ffffff
+
+# Visual Polish (Hidden Lines)
+line-color=00000000
+separator-color=00000000
+
+# Text / Typography
+text-color=ffffff
+font="Cantarell"
+font-size=24
+
+# 12-Hour Clock Formatting
+timestr=%I:%M %p
+datestr=%A, %B %e

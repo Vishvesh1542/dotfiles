@@ -1,0 +1,21 @@
+/- animations {
+    // Springy animations
+     workspace-switch {
+         spring damping-ratio=0.89 stiffness=700 epsilon=0.001
+     }
+     window-movement {
+          spring damping-ratio=0.89 stiffness=700 epsilon=0.001
+      }
+     window-resize {
+           spring damping-ratio=0.7 stiffness=800 epsilon=0.0001
+    }
+     horizontal-view-movement {
+         spring damping-ratio=0.89 stiffness=700 epsilon=0.001
+     }
+
+    overview-open-close {
+        spring damping-ratio=0.89 stiffness=700 epsilon=0.001
+    }
+
+
+}

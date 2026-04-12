@@ -1,0 +1,149 @@
+binds {
+    Mod+Shift+Slash { show-hotkey-overlay; }
+
+    // Waybar
+    //Mod+Shift+C { spawn "pkill" "-SIGUSR1" "waybar"; }
+
+    // STUDIES
+    Mod+x {spawn-sh "python ~/.config/zenith/custom_timer.py";}
+    Ctrl+Alt+x {spawn-sh "python ~/.config/zenith/custom_timer.py";}
+    Mod+Shift+C {spawn-sh "rm /tmp/timer_time";}
+
+
+    // Applications
+    Mod+Q hotkey-overlay-title="Open a Terminal" { spawn "ghostty"; }
+    Mod+E hotkey-overlay-title="Open File explorer" {spawn "nautilus" "--new-window";}
+    Mod+Space hotkey-overlay-title="Launcher" { spawn "vicinae" "toggle"; }
+    Super+Escape hotkey-overlay-title="Lock the Screen" { spawn "swaylock"; }
+    Mod+C repeat=false { close-window; }
+
+
+    // Function Keys
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "~/.config/scripts/volume.sh" "up"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "~/.config/scripts/volume.sh" "down"; }
+    XF86AudioMute        allow-when-locked=true { spawn "~/.config/scripts/volume.sh" "mute"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn "~/.config/scripts/volume.sh" "micmute"; }
+    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioPause       allow-when-locked=true {spawn-sh "playerctl play-pause"; }
+    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
+    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86MonBrightnessUp allow-when-locked=true { spawn "~/.config/scripts/brightness.sh" "up"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "~/.config/scripts/brightness.sh" "down"; }
+    Mod+Z repeat=false { toggle-overview; }
+
+
+    // Column Stuff
+    Mod+A  { focus-column-left; }
+    Mod+S  { focus-window-or-workspace-down; }
+    Mod+W    { focus-window-or-workspace-up; }
+    Mod+D { focus-column-right; }
+    Mod+H     { focus-column-left; }
+    Mod+J     { focus-window-down; }
+    Mod+K     { focus-window-up; }
+    Mod+L     { focus-column-right; }
+
+    Ctrl+Alt+A {focus-column-left;}
+    Ctrl+Alt+D {focus-column-right;}
+    Ctrl+Alt+S  { focus-window-or-workspace-down; }
+    Ctrl+Alt+W  { focus-window-or-workspace-up; }
+
+
+
+    Mod+Shift+A  { move-column-left; }
+    Mod+Shift+S  { move-window-down-or-to-workspace-down; }
+    Mod+Shift+W    { move-window-up-or-to-workspace-up; }
+    Mod+Shift+D { move-column-right; }
+
+    Mod+Ctrl+A  { consume-or-expel-window-left; }
+    Mod+Control+D { consume-or-expel-window-right; }
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+C { toggle-column-tabbed-display; }
+
+    Mod+Ctrl+Z { set-column-width "-10%"; }
+    Mod+Ctrl+X { set-column-width "+10%"; }
+
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+
+    Mod+V       { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+
+    Mod+Ctrl+F { expand-column-to-available-width; }
+    // Mod+X { center-column; }
+
+    Mod+Shift+WheelScrollDown      { focus-column-right; }
+    Mod+Shift+WheelScrollUp        { focus-column-left; }
+    Mod+Ctrl+Shift+WheelScrollDown { move-column-right; }
+    Mod+Ctrl+Shift+WheelScrollUp   { move-column-left; }
+
+    Mod+WheelScrollRight      { focus-column-right; }
+    Mod+WheelScrollLeft       { focus-column-left; }
+    Mod+Ctrl+WheelScrollRight { move-column-right; }
+    Mod+Ctrl+WheelScrollLeft  { move-column-left; }
+
+
+    // Workspace Stuff
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+
+    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
+
+
+    // Monitor related stuff
+    Mod+Shift+Left  { focus-monitor-left; }
+    Mod+Shift+Down  { focus-monitor-down; }
+    Mod+Shift+Up    { focus-monitor-up; }
+    Mod+Shift+Right { focus-monitor-right; }
+    Mod+Shift+H     { focus-monitor-left; }
+    Mod+Shift+J     { focus-monitor-down; }
+    Mod+Shift+K     { focus-monitor-up; }
+    Mod+Shift+L     { focus-monitor-right; }
+
+    Mod+Shift+Ctrl+Left  { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+Down  { move-column-to-monitor-down; }
+    Mod+Shift+Ctrl+Up    { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+Right { move-column-to-monitor-right; }
+    Mod+Shift+Ctrl+H     { move-column-to-monitor-left; }
+    Mod+Shift+Ctrl+J     { move-column-to-monitor-down; }
+    Mod+Shift+Ctrl+K     { move-column-to-monitor-up; }
+    Mod+Shift+Ctrl+L     { move-column-to-monitor-right; }
+
+
+    // Misclenius
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print { screenshot-window; }
+
+    Mod+Shift+E { quit; }
+    Ctrl+Alt+Delete { quit; }
+    Mod+Shift+P { power-off-monitors; }
+
+
+    // Wallpaper Stuff
+    Ctrl+Mod+Space { spawn "awww" "pause"; }
+
+    }

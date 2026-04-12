@@ -1,0 +1,7 @@
+background=#000000
+background-opacity=0.5
+
+keybind = ctrl+e=toggle_tab_overview
+keybind = ctrl+w=close_tab
+keybind = ctrl+shift+f=start_search
+keybind = ctrl+t=new_tab
