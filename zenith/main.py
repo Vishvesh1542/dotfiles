@@ -225,26 +225,48 @@ class OptionPill(Gtk.Box):
                 self.left_button.remove_css_class("option_pill_waiting")
 
 
-class QuickSettings(Gtk.Popover):
+class QuickSettings(Gtk.Window):
     def __init__(self, audio_manager) -> None:
         super().__init__()
-        self.set_size_request(400, -1)
-
         self.set_can_focus(True)
-        self.set_margin_end(5)
-        self.set_has_arrow(False)
         self.add_css_class("right_popover_layout")
 
         self.audio_manager = audio_manager
 
+        self._is_visible = False
+        self._hide_timeout_id = None
+
+        self.set_decorated(False)
+        self.set_titlebar(None)
+
+        LayerShell.init_for_window(self)
+        LayerShell.set_layer(self, LayerShell.Layer.TOP)
+        LayerShell.set_anchor(self, LayerShell.Edge.TOP, True)
+        LayerShell.set_anchor(self, LayerShell.Edge.RIGHT, True)
+
+        LayerShell.set_margin(self, LayerShell.Edge.TOP, 5)
+        LayerShell.set_margin(self, LayerShell.Edge.RIGHT, 5)
+        LayerShell.set_keyboard_mode(self, LayerShell.KeyboardMode.ON_DEMAND)
+        LayerShell.set_namespace(self, "gtk-bar-popup")
+
+        hover_checker = Gtk.EventControllerMotion()
+        key_checker = Gtk.EventControllerKey()
+        hover_checker.connect("leave", self._on_leave)
+        hover_checker.connect("enter", self._on_enter)
+        key_checker.connect("key-pressed", self._on_key_pressed)
+        self.add_controller(hover_checker)
+        self.add_controller(key_checker)
+
+        self.set_margin_top(0)
+        self.set_margin_bottom(0)
+
         # The main layout
         self.layout = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         self.layout.add_css_class("right_popover_box")
-        self.layout.set_hexpand(True)
-        self.layout.set_vexpand(True)
-        self.layout.set_margin_top(5)
-        self.layout.set_margin_start(5)
-        self.layout.set_margin_end(5)
+        self.layout.set_size_request(400, 1)
+        self.layout.set_margin_top(10)
+        self.layout.set_margin_start(10)
+        self.layout.set_margin_end(10)
         self.layout.set_margin_bottom(5)
 
         # The bar of circled icons
@@ -284,7 +306,9 @@ class QuickSettings(Gtk.Popover):
         self.init_brightness_slider()
         self.init_options_layout()
 
-        self.set_child(self.layout)
+        self.wrapper = Gtk.Revealer()
+        self.wrapper.set_child(self.layout)
+        self.set_child(self.wrapper)
 
     def init_power_expander(self):
         icon = "system-shutdown-symbolic"
@@ -506,6 +530,7 @@ class QuickSettings(Gtk.Popover):
         self.audio_device_dropdown.set_reveal_child(not is_visible)
 
     def reset_dropdowns(self):
+
         i = [
             self.audio_device_dropdown,
             self.power_container,
@@ -515,6 +540,10 @@ class QuickSettings(Gtk.Popover):
 
         for x in i:
             x.set_reveal_child(False)
+
+        self.set_default_size(-1, -1)
+        self.layout.set_size_request(400, -1)
+        self.queue_resize()
 
     def toggle_mute(self):
         self.audio_manager.toggle_mute()
@@ -582,18 +611,55 @@ class QuickSettings(Gtk.Popover):
     def reveal(self):
         self.popup()
 
-        self.update_audio_info(
-            self.audio_manager.is_muted,
-            self.audio_manager.current_device,
-            self.audio_manager.current_volume,
-        )
-        self.update_audio_devices()
-        self.update_battery_info()
-        self.update_brightness()
+        if self._is_visible:
+            self.update_audio_info(
+                self.audio_manager.is_muted,
+                self.audio_manager.current_device,
+                self.audio_manager.current_volume,
+            )
+            self.update_audio_devices()
+            self.update_battery_info()
+            self.update_brightness()
+
+    def _on_leave(self, *_):
+        if self._hide_timeout_id is None:
+            self._hide_timeout_id = GLib.timeout_add(10000, self.hide)
+
+    def _on_enter(self, *_):
+        if self._hide_timeout_id is not None:
+            GLib.source_remove(self._hide_timeout_id)
+            self._hide_timeout_id = None
+
+    def _on_key_pressed(self, controller, keyval, keycode, state):
+        if keyval == Gdk.KEY_Escape:
+            self.hide()
+            return True
+        return False
 
     def popup(self):
         self.reset_dropdowns()
-        super().popup()
+
+        if not self._is_visible:
+            self.present()
+
+            self.wrapper.set_reveal_child(True)
+            self._is_visible = True
+
+        elif self._is_visible:
+            self._is_visible = False
+            self.hide()
+
+    def hide(self):
+        self.wrapper.set_reveal_child(False)
+        self._is_visible = False
+        self._hide_timeout_id = None
+        self.wrapper.set_reveal_child(False)
+
+        GLib.timeout_add(200, self._set_visible_false)
+        return GLib.SOURCE_REMOVE
+
+    def _set_visible_false(self):
+        self.set_visible(False)
 
 
 class BarWindow(Gtk.ApplicationWindow):
@@ -641,7 +707,7 @@ class BarWindow(Gtk.ApplicationWindow):
         self.right_side_layout.append(self.audio_icon)
         self.right_side_layout.append(self.battery_icon)
         self.right_side.set_child(self.right_side_layout)
-        self.quicksettings.set_parent(self.right_side)
+        # self.quicksettings.set_parent(self.right_side)
         self.quicksettings.audio_manager = self.audio_manager
 
         self.niri_manager = NiriManager(parent=self)

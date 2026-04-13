@@ -37,8 +37,17 @@ layer-rule {
     background-effect {
         blur true
         xray false
-
     }
+
+}
+layer-rule {
+    match namespace="gtk-bar-popup"
+    background-effect {
+        blur true
+        xray false
+    }
+
+    geometry-corner-radius 23
 
 }
 layer-rule {

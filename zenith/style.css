@@ -10,7 +10,7 @@ window.is-transparent {
 }
 
 window.is-opaque {
-    background-color: rgba(12, 12, 12, 0.9);
+    background-color: alpha(var(--overview-bg-color), 0.8);
 }
 
 .button:hover {
@@ -45,10 +45,9 @@ window.is-opaque {
 }
 
 .right_popover_layout {
-    background: alpha(var(--overview-bg-color), 0.5);
+    background: alpha(var(--overview-bg-color), 0.8);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 23px;
-    margin-top: 10px;
 }
 
 .right_popover_layout contents {
