@@ -1,7 +1,6 @@
 window {
     opacity: 1;
-    background-color: rgba(0, 0, 0, 0.6);
-    border-color: #fff;
+    background-color: alpha(var(--overview-bg-color), 0.5);
     transition: background-color 0.3s ease;
     border-width: 5px;
 }
@@ -15,7 +14,7 @@ window.is-opaque {
 }
 
 .button:hover {
-    background-color: var(--active-toggle-bg-color);
+    background-color: alpha(var(--active-toggle-bg-color), 0.7);
 }
 
 .button:active {
@@ -46,7 +45,7 @@ window.is-opaque {
 }
 
 .right_popover_layout {
-    background: var(--overview-bg-color);
+    background: alpha(var(--overview-bg-color), 0.5);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 23px;
     margin-top: 10px;
@@ -87,7 +86,7 @@ window.is-opaque {
 }
 
 .slider_item:hover {
-    background-color: @dark_2;
+    background-color: alpha(var(--card-bg-color), 0.9);
 }
 
 .slider_item_top {
@@ -121,7 +120,7 @@ window.is-opaque {
 }
 
 .transparent_button:hover {
-    background: var(--active-toggle-bg-color);
+    background: alpha(var(--active-toggle-bg-color), 0.7);
 }
 
 .transparent_button:active {
@@ -147,7 +146,7 @@ window.is-opaque {
     border-bottom-left-radius: 67px;
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
-    background-color: alpha(var(--thumbnail-bg-color), 0.9);
+    background-color: alpha(var(--thumbnail-bg-color), 0.5);
 }
 
 .option_pill_right {
