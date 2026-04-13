@@ -6,17 +6,16 @@ own bar.
 You can install the individual components using the justfile or run `just setup-computer`.
 ( Or run `install.sh` it is meant to setup a fresh install of Arch )
 
-
 # Screenshots
+<details>
+  <summary>Screenshots</summary>
 ( Currently there are screenshots of the bar because that is 
 basically the only useful item you might be interested in )
-![[general desktop.png]]
-
-![[quicksettings menu.png]]
-
-![[power options.png]]
-
-
+  
+![General Desktop](./screenshots/general%20desktop.png)
+![Quicksettings Menu](./screenshots/quicksettings%20menu.png)
+![Power Options](./screenshots/power%20options.png)
+</details>
 
 <details>
 <summary>AI usage</summary>
