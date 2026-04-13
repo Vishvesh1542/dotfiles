@@ -61,7 +61,7 @@ window.is-opaque {
 
 .dropdown_icon {
     -gtk-icon-size: 20px;
-    background-color: @accent_bg_color;
+    background-color: var(--accent-bg-color);
     border-radius: 50%;
     font-size: 400px;
 }
@@ -156,6 +156,32 @@ window.is-opaque {
     border-top-right-radius: 67px;
     border-bottom-right-radius: 67px;
     border-left: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.option_pill_both {
+    border-top-right-radius: 67px;
+    border-bottom-right-radius: 67px;
+    border-top-left-radius: 67px;
+    border-bottom-left-radius: 67px;
+}
+
+.option_pill_waiting {
+    opacity: 50%;
+}
+
+.option_pill_active {
+    background-color: var(--accent-bg-color);
+}
+
+.option_pill_active:hover {
+    background-color: alpha(var(--accent-color), 0.65);
+}
+
+.option_pill_active_right {
+    background-color: alpha(var(--accent-bg-color), 0.8);
+}
+.option_pill_active_right:hover {
+    background-color: alpha(var(--accent-color), 0.6);
 }
 
 .option_pill_description {

@@ -2,6 +2,7 @@ import os
 import subprocess
 from ctypes import CDLL
 from datetime import datetime
+from optparse import Option
 
 import gi
 
@@ -17,12 +18,11 @@ gi.require_version("Gdk", "4.0")
 gi.require_version("Gtk4LayerShell", "1.0")
 gi.require_version("UPowerGlib", "1.0")
 
-from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango
-from gi.repository import Gtk4LayerShell as LayerShell
-
 # Custom imports
 from audio_manager import AudioManager
-from battery_manager import BatteryManager
+from battery_manager import BatteryManager, KeepAwake
+from gi.repository import Adw, Gdk, Gio, GLib, Gtk, Pango
+from gi.repository import Gtk4LayerShell as LayerShell
 from power_options import PowerOptions
 from workspaces import NiriManager, WorkspaceArea
 
@@ -34,6 +34,7 @@ class BottomSlider(Gtk.Revealer):
         self.main_layout.set_hexpand(True)
         self.main_layout.set_vexpand(True)
         self.main_layout.set_margin_top(10)
+        self.main_layout.set_margin_bottom(10)
 
         self.main_layout.add_css_class("dropdown_bg")
 
@@ -136,19 +137,23 @@ class AudioDeviceSelection(BottomSlider):
 
 class OptionPill(Gtk.Box):
     def __init__(
-        self, title, description, icon, bottom_slider: Gtk.Revealer, parent
+        self, title, description, icon, bottom_slider, parent, manager
     ) -> None:
         super().__init__()
         self.set_hexpand(True)
 
-        self.bottom_slider = bottom_slider
         self.parent = parent
+        self.manager = manager
+
+        self.set_margin_top(5)
+        self.set_margin_bottom(5)
 
         self.left_button = Gtk.Button()
         self.left_button.add_css_class("option_pill_left")
         self.left_button.add_css_class("button")
         self.left_button.set_size_request(-1, 50)
         self.left_button.set_hexpand(True)
+        self.left_button.connect("clicked", lambda x: self.pressed())
 
         self.left_layout = Gtk.Box()
 
@@ -180,18 +185,44 @@ class OptionPill(Gtk.Box):
 
         self.left_button.set_child(self.left_layout)
 
-        self.right_button = Gtk.Button.new_from_icon_name("pan-end-symbolic")
-        self.right_button.connect("clicked", lambda x: self.callback())
-        self.right_button.add_css_class("option_pill_right")
-        self.right_button.add_css_class("icon_size")
-
         self.append(self.left_button)
-        self.append(self.right_button)
+        self.bottom_slider = None
+
+        if bottom_slider:
+            self.bottom_slider = bottom_slider
+
+            self.right_button = Gtk.Button.new_from_icon_name("pan-end-symbolic")
+            self.right_button.connect("clicked", lambda x: self.callback())
+            self.right_button.add_css_class("option_pill_right")
+            self.right_button.add_css_class("icon_size")
+
+            self.append(self.right_button)
+
+        else:
+            self.left_button.add_css_class("option_pill_both")
+
+        if manager and manager.is_active:
+            self.left_button.add_css_class("option_pill_active")
 
     def callback(self):
         is_visible = self.bottom_slider.get_reveal_child()
         self.parent.reset_dropdowns()
         self.bottom_slider.set_reveal_child(not is_visible)
+
+    def pressed(self):
+        if self.manager:
+            self.left_button.add_css_class("option_pill_waiting")
+            result = self.manager.toggle()
+            GLib.timeout_add_seconds(
+                2, self.left_button.remove_css_class, "option_pill_waiting"
+            )
+            if result == "active":
+                self.left_button.add_css_class("option_pill_active")
+                self.left_button.remove_css_class("option_pill_waiting")
+
+            elif result == "inactive":
+                self.left_button.remove_css_class("option_pill_active")
+                self.left_button.remove_css_class("option_pill_waiting")
 
 
 class QuickSettings(Gtk.Popover):
@@ -378,7 +409,7 @@ class QuickSettings(Gtk.Popover):
         self.options_layout = Gtk.Grid()
         self.options_layout.set_margin_top(10)
         self.options_layout.set_column_spacing(12)
-        self.options_layout.set_row_spacing(10)
+        self.options_layout.set_row_spacing(0)
 
         self.options_layout.set_hexpand(True)
         self.options_layout.set_column_homogeneous(True)
@@ -403,28 +434,45 @@ class QuickSettings(Gtk.Popover):
             "network-wireless-symbolic",
             self.dropdown_for_wifi,
             self,
+            None,
         )
+        button_1.left_button.add_css_class("option_pill_active")
+        button_1.right_button.add_css_class("option_pill_active_right")
         button_2 = OptionPill(
             "Bluetooth",
             "My bluetooth Device",
             "bluetooth-symbolic",
             self.dropdown_for_bluetooth,
             self,
+            None,
+        )
+
+        keep_awake_manager = KeepAwake()
+        keep_awake_button = OptionPill(
+            "Keep Awake",
+            "Don't suspend",
+            "org.gnome.Settings-accessibility-seeing-symbolic",
+            None,
+            self,
+            keep_awake_manager,
         )
 
         c = 0
         r = 0
-        buttons = [button_1, button_2]
+        buttons = [button_1, button_2, keep_awake_button]
         for button in buttons:
             self.options_layout.attach(button, c, r, 1, 1)
+            if button.bottom_slider:
+                self.options_layout.attach(
+                    button.bottom_slider, 0, r + 1 if c == 0 else r + 2, 2, 1
+                )
 
             c += 1
             if c > 1:
                 c = 0
-                r += 1
-
-        self.options_layout.attach(self.dropdown_for_wifi, c, r, 2, 1)
-        self.options_layout.attach(self.dropdown_for_bluetooth, c, r, 2, 1)
+                r += 3
+        # self.options_layout.attach(self.dropdown_for_wifi, c, r + 1, 2, 1)
+        # self.options_layout.attach(self.dropdown_for_bluetooth, c, r + 2, 2, 1)
 
         self.layout.append(self.options_layout)
 

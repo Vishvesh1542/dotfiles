@@ -1,3 +1,5 @@
+import subprocess
+
 from gi.repository import Gio
 
 
@@ -42,3 +44,25 @@ class BatteryManager:
         self.update_data()
         self.parent.update_battery_info()
         return True
+
+
+class KeepAwake:
+    def __init__(self) -> None:
+        self.is_active = bool(subprocess.run(["pgrep", "swayidle"]).returncode)
+
+    def toggle(self):
+        try:
+            if self.is_active:
+                _ = subprocess.Popen(
+                    ["swayidle"], stdout=subprocess.DEVNULL, start_new_session=True
+                )
+                self.is_active = False
+                return "inactive"
+            else:
+                _ = subprocess.run(["pkill", "swayidle"])
+                self.is_active = True
+                return "active"
+
+        except Exception as e:
+            print(e)
+            return False

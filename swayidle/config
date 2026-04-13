@@ -1,4 +1,4 @@
-timeout 100 'brightnessctl set 10% -save' resume 'brightnessctl set -restore'
+timeout 100 'brightnessctl set 10% --save' resume 'brightnessctl --restore'
 
 timeout 120 'swaylock -f'
 timeout 120 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'
