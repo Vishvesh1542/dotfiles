@@ -1,5 +1,5 @@
 spawn-at-startup "elephant"
-spawn-at-startup "walker --gapplication-service"
+spawn-at-startup "walker" "--gapplication-service"
 // spawn-at-startup "waybar"
 spawn-sh-at-startup "RUST_LOG=debug RUST_BACKTRACE=1 GSK_RENDERER=cairo ~/Desktop/rust-bar/target/release/rust-bar > /tmp/bar.log 2>&1"
 // spawn-at-startup "swaync"

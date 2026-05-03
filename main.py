@@ -45,12 +45,13 @@ def print_error(text):
 
 def run_void(cmd):
     return subprocess.run(
-        cmd.split(" "),
+        cmd,
         capture_output=False,
         text=True,
+        shell=True,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
-        check=True,
+        check=False,
     )
 
 
@@ -218,26 +219,13 @@ def install_tools():
             status.update(f"Installing {app}")
             run_void(f"sudo pacman -S {app} --needed --noconfirm")
 
-    result = run_void("yay --help")
+    result = run_void("pacman -Qq yay")
     if result.returncode != 0:
-        run_void(
-            "cd /tmp && git clone https://aur.archlinux.org/yay-bin.git && cd yay-bin && makepkg -si"
-        )
-
-
-# mkdir -p ~/.local/share/applications
-#  apps=(avahi-discover bssh bvnc qv4l2 qvidcap nvim)
-
-#  for app in "${apps[@]}"; do
-#      file="$HOME/.local/share/applications/$app.desktop"
-#      echo "[Desktop Entry]" > "$file"
-#      echo "Type=Application" >> "$file"
-#      echo "Name=$app (Hidden)" >> "$file"
-#      echo "NoDisplay=true" >> "$file"
-#      echo "Exec=/usr/bin/false" >> "$file"
-#      echo "Hiding $app..."
-#  done
-#
+        print_info("Installing yay")
+        os.chdir("/tmp")
+        run_void("git clone https://aur.archlinux.org/yay-bin.git")
+        os.chdir("/tmp/yay-bin")
+        run_void("makepkg -si")
 
 
 def set_tweaks():
@@ -271,27 +259,23 @@ def set_tweaks():
         if not os.path.isdir(f"{os.path.expanduser('~')}/.local/share/applications"):
             os.mkdir(f"{os.path.expanduser('~')}/.local/share/applications")
 
-        apps = ["avahi-discover", "bssh", "bvnc", "qv4l2", "qvidcap", "nvim"]
-        base_path = f"{os.path.expanduser('~')}/.local/share/applications/"
+        run_void("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
+
+        apps = [
+            "avahi-discover",
+            "bssh",
+            "bvnc",
+            "qv4l2",
+            "qvidcap",
+            "nvim",
+            "org.freedesktop.IBus.Setup",
+        ]
+        base_path = "/usr/share/applications/"
 
         for app in apps:
-            file_path = base_path + app
-
-            content = [
-                "[Desktop Entry]",
-                "Type=Application",
-                f"Name={app} (Hidden)",
-                "NoDisplay=true",
-                "Exec=/usr/bin/false",
-            ]
-
-            random_wait(0.2, 0.4)
-            try:
-                with open(file_path, "w") as f:
-                    f.write("\n".join(content) + "\n")
-                    status.update(f"hiding {app}")
-            except OSError as e:
-                print_warning(f"Failed to write override for {app}, {e}")
+            file_path = base_path + app + ".desktop"
+            status.update(f"Deleting {app}")
+            run_void(f"sudo rm {file_path}")
 
 
 def install_apps():
@@ -309,14 +293,25 @@ def install_apps():
         "xdg-desktop-portal-gnome",
         "gdm",
         "zed",
+        "fish",
+        "imagemagick",
     ]
 
     common_apps = [
         "fastfetch",
         "nvim",
         "adw-gtk-theme",
-        "flatpak",
+        "loupe",
+        "papers",
         "fzf",
+        "resources",
+        "showtime",
+        # GST needed for showtime
+        "gst-plugins-base",
+        "gst-plugins-good",
+        "gst-plugins-bad",
+        "gst-plugins-ugly",
+        "gst-libav",
         # "openrgb",
         "nautilus",
         "ghostty",
@@ -342,6 +337,8 @@ def install_apps():
         for app in yay_apps:
             status.update(f"Installing {app} (AUR)")
             run_void(f"yay -S --needed --noconfirm {app}")
+
+    print_info("Please change your shell by running 'chsh'")
 
 
 def install():
