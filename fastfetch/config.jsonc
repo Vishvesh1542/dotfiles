@@ -1,0 +1,72 @@
+{
+  "logo": {
+    "type": "auto",
+    "source": "~/.config/fastfetch/rayquaza.png",
+    "width": 30,
+  },
+
+  "display": {
+    "separator": " | ",
+    "color": {
+      "keys": "white",
+      "title": "yellow",
+    },
+    "bar": {
+      "width": 10,
+      "char": {
+        "elapsed": "■",
+        "total": "-",
+      },
+    },
+  },
+
+  "modules": [
+    "break",
+    "break",
+    "title",
+    "break",
+
+    {
+      "type": "cpu",
+      "keyColor": "yellow",
+      "key": "CPU",
+      "format": "Core i7 1180H {temperature}", // Hard coded because IDK how to get it to show something small
+    },
+
+    {
+      "type": "gpu",
+      "keyColor": "yellow",
+      "key": "GPU",
+      "format": "{name} {temperature}",
+    },
+    {
+      "type": "disk",
+      "keyColor": "yellow",
+      "key": "Disk",
+      "format": "{1} \u001b[32m{2}\u001b[0m",
+    },
+    {
+      "type": "memory",
+      "key": "Memory",
+      "keyColor": "yellow",
+      "format": "{1} {3}",
+    },
+    "break",
+
+    {
+      "type": "os",
+      "key": "OS",
+      "keyColor": "yellow",
+      "format": "{name} {version}",
+    },
+    {
+      "type": "shell",
+      "keyColor": "yellow",
+      "format": "{process-name}",
+    },
+    {
+      "type": "uptime",
+      "keyColor": "yellow",
+    },
+  ],
+}

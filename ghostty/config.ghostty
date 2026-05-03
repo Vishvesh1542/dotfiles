@@ -1,0 +1,11 @@
+background=#222226
+background-opacity=1
+window-padding-balance = true
+
+window-padding-x = 10
+window-padding-y = 10
+
+keybind = ctrl+e=toggle_tab_overview
+keybind = ctrl+w=close_tab
+keybind = ctrl+shift+f=start_search
+keybind = ctrl+t=new_tab

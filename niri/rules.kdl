@@ -1,0 +1,81 @@
+
+window-rule {
+    match title="floating"
+    open-floating true
+}
+
+window-rule {
+    match title="^Picture-in-Picture$"
+    open-floating true
+    default-column-width { proportion 0.24; }
+    default-floating-position x=20 y=20 relative-to="top-right"
+}
+
+window-rule {
+    match app-id="zen"
+draw-border-with-background false
+
+background-effect {
+    blur true
+    xray true
+
+}
+}
+
+window-rule {
+    match app-id="com.mitchellh.ghostty"
+    background-effect {
+	blur true
+        xray true
+
+    }
+
+}
+
+layer-rule {
+    match namespace="gtk-bar"
+    background-effect {
+        blur true
+        xray false
+    }
+
+}
+layer-rule {
+    match namespace="gtk-bar-popup"
+    background-effect {
+        blur false
+        xray false
+    }
+
+    geometry-corner-radius 23
+
+}
+layer-rule {
+    match namespace="vicinae"
+
+    background-effect {
+    blur true
+    xray false
+    }
+
+    shadow {
+        on
+        softness 40
+        spread 5
+        offset x=0 y=5
+        color "#00000064"
+        draw-behind-window false
+
+        inactive-color "#00000032"
+    }
+
+    geometry-corner-radius 12
+}
+
+blur {
+    off
+    passes 5
+    offset 1
+    noise 0.04
+    saturation 1.7
+}

@@ -1,0 +1,42 @@
+include "input.kdl"
+include "layout.kdl"
+include "rules.kdl"
+include "animations.kdl"
+include "binds.kdl"
+include "spawn-at-startup.kdl"
+include "colors.kdl"
+
+hotkey-overlay {
+    skip-at-startup
+}
+
+window-rule {
+    geometry-corner-radius 18
+    clip-to-geometry true
+}
+
+overview {
+    zoom 0.4
+    backdrop-color "#191919"
+}
+
+
+
+output "eDP-1" {
+    scale 1
+
+}
+
+recent-windows {
+    off
+
+}
+
+
+environment {
+    QT_QPA_PLATFORMTHEME "qt6ct"
+
+}
+
+//prefer-no-csd
+screenshot-path "~/Pictures/Screenshots/Niri from %Y-%m-%d %H-%M-%S.png"

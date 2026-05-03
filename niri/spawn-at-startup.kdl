@@ -1,0 +1,10 @@
+spawn-at-startup "vicinae" "server"
+// spawn-at-startup "waybar"
+spawn-sh-at-startup "RUST_LOG=debug RUST_BACKTRACE=1 GSK_RENDERER=cairo ~/Desktop/rust-bar/target/release/rust-bar > /tmp/bar.log 2>&1"
+spawn-at-startup "swaync"
+spawn-at-startup "swayidle"
+spawn-at-startup "awww-daemon"
+spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
+
+spawn-at-startup "wlsunset" "-l" "17" "-L" "78"
+
