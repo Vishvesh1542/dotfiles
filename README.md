@@ -3,8 +3,7 @@ My personal dotfiles featuring a custom GTK4 bar built with python
 This is personally meant to be used by me when settings up a new computer, and developing my 
 own bar.
 
-You can install the individual components using the justfile or run `just setup-computer`.
-( Or run `install.sh` it is meant to setup a fresh install of Arch )
+You can install the individual components using the python file ( just run it ).
 
 # Screenshots
 <details>
