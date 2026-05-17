@@ -1,7 +1,7 @@
 spawn-at-startup "elephant"
 spawn-at-startup "walker" "--gapplication-service"
 // spawn-at-startup "waybar"
-spawn-sh-at-startup "RUST_LOG=debug RUST_BACKTRACE=1 GSK_RENDERER=cairo ~/Desktop/rust-bar/target/release/rust-bar > /tmp/bar.log 2>&1"
+spawn-sh-at-startup "RUST_LOG=debug RUST_BACKTRACE=1 ~/Projects/rushell/target/release/rushell > /tmp/bar.log 2>&1"
 // spawn-at-startup "swaync"
 // spawn-at-startup "swayidle"
 // spawn-at-startup "awww-daemon"

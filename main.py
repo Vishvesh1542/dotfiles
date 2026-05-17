@@ -288,6 +288,8 @@ def install_apps():
         "wlsunset",
         "niri",
         "xwayland-satellite",
+        "gvfs-mtp",
+        "gvfs-afc",
         "bluetui",
         "polkit-gnome",
         "xdg-desktop-portal-gnome",

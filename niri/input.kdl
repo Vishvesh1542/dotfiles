@@ -13,3 +13,9 @@ input {
     warp-mouse-to-focus
     focus-follows-mouse max-scroll-amount="50%"
 }
+
+gestures {
+	hot-corners {
+		off
+	}
+}

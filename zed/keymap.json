@@ -33,5 +33,17 @@
     "bindings": {
       "alt-x": "debugger::Start"
     }
+  },
+  {
+    "context": "Workspace",
+    "bindings": {
+      "alt-e": "task::Rerun"
+    }
+  },
+  {
+    "context": "Workspace",
+    "unbind": {
+      "alt-t": "task::Rerun"
+    }
   }
 ]
