@@ -1,8 +1,8 @@
 {
   "logo": {
     "type": "auto",
-    "source": "~/.config/fastfetch/rayquaza.png",
-    "width": 30,
+    "source": "~/.config/fastfetch/mew.png",
+    "width": 28,
   },
 
   "display": {
@@ -30,12 +30,14 @@
       "type": "cpu",
       "keyColor": "yellow",
       "key": "CPU",
-      "format": "Core i7 1180H {temperature}", // Hard coded because IDK how to get it to show something small
+      "temp": true,
+      "format": "{name} {temperature}", 
     },
 
     {
       "type": "gpu",
       "keyColor": "yellow",
+      "temp": true,
       "key": "GPU",
       "format": "{name} {temperature}",
     },
@@ -67,6 +69,11 @@
     {
       "type": "uptime",
       "keyColor": "yellow",
+    },
+    {
+      "type": "battery",
+      "keyColor": "yellow",
+      "format": "{4}",
     },
   ],
 }
