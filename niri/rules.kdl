@@ -33,7 +33,7 @@ window-rule {
 }
 
 layer-rule {
-    match namespace="gtk-bar"
+    match namespace="rushell-bar"
     background-effect {
         blur true
         xray false
@@ -73,7 +73,7 @@ layer-rule {
 }
 
 blur {
-    off
+    on
     passes 5
     offset 1
     noise 0.04

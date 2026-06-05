@@ -27,6 +27,9 @@ layout {
         left 12
         right 12
     }
-
+	
+    focus-ring {
+	    width 2
+    }
 
 }

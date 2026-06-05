@@ -267,6 +267,7 @@ def set_tweaks():
             "bvnc",
             "qv4l2",
             "qvidcap",
+            "lstopo",
             "nvim",
             "org.freedesktop.IBus.Setup",
         ]
@@ -293,6 +294,7 @@ def install_apps():
         "bluetui",
         "polkit-gnome",
         "xdg-desktop-portal-gnome",
+        "xdg-utils",
         "gdm",
         "zed",
         "fish",
@@ -314,6 +316,7 @@ def install_apps():
         "gst-plugins-bad",
         "gst-plugins-ugly",
         "gst-libav",
+        "ffmpegthumbnailer",
         # "openrgb",
         "nautilus",
         "ghostty",
