@@ -343,6 +343,7 @@ def install_apps():
             status.update(f"Installing {app} (AUR)")
             run_void(f"yay -S --needed --noconfirm {app}")
 
+    run_void("gsettings set org.gnome.desktop.interface gtk-theme 'adw-gtk3-dark'")
     print_info("Please change your shell by running 'chsh'")
 
 
