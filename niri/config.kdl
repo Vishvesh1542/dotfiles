@@ -4,7 +4,7 @@ include "rules.kdl"
 include "animations.kdl"
 include "binds.kdl"
 include "spawn-at-startup.kdl"
-include "rushell/rushell.kdl"
+include "colors.kdl"
 
 hotkey-overlay {
     skip-at-startup

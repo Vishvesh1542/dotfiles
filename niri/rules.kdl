@@ -33,7 +33,7 @@ window-rule {
 }
 
 layer-rule {
-    match namespace="rushell-bar"
+    match namespace="grr"
     background-effect {
         blur true
         xray false
