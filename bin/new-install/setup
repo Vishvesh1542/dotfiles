@@ -1,0 +1,15 @@
+#!/usr/bin/bash
+
+sudo -v
+
+( while true; do sudo -n true; sleep 60; done ) &
+SUDO_KEEPALIVE_PID=$!
+
+
+setup-install
+gum log "Setting up symlinks"
+ln -s $HOME/.local/share/archy/config/* ~/.config/
+sudo chsh $USER -s /usr/bin/fish
+
+gum log "Enabling bluetooth"
+sudo systemctl enable bluetooth

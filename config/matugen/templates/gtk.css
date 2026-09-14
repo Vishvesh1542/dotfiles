@@ -1,0 +1,35 @@
+/*
+ * GTK Colors
+ * Generated with Matugen
+ */
+
+/* Accent — used for suggested-action buttons, links, selection, switches */
+@define-color accent_color {{colors.primary.default.hex}};
+@define-color accent_fg_color {{colors.on_primary.default.hex}};
+@define-color accent_bg_color {{colors.primary.default.hex}};
+
+/* Window — base level, the app's outermost surface */
+@define-color window_bg_color {{colors.surface.default.hex}};
+@define-color window_fg_color {{colors.on_surface.default.hex}};
+
+/* Headerbar — one step up from window so it visually separates from content */
+@define-color headerbar_bg_color {{colors.surface_container_low.default.hex}};
+@define-color headerbar_fg_color {{colors.on_surface.default.hex}};
+
+/* Popover — floats above everything, needs to read as "raised" */
+@define-color popover_bg_color {{colors.surface_container_high.default.hex}};
+@define-color popover_fg_color {{colors.on_surface.default.hex}};
+
+/* View — text views, list rows, scrollable content; sits *below* window level */
+@define-color view_bg_color {{colors.surface_container_lowest.default.hex}};
+@define-color view_fg_color {{colors.on_surface.default.hex}};
+
+/* Card — a distinct raised block within a view, between view and popover */
+@define-color card_bg_color {{colors.surface_container.default.hex}};
+@define-color card_fg_color {{colors.on_surface.default.hex}};
+
+/* Sidebar — its own tonal step, with a real border instead of matching bg */
+@define-color sidebar_bg_color {{colors.surface_container_low.default.hex}};
+@define-color sidebar_fg_color {{colors.on_surface.default.hex}};
+@define-color sidebar_border_color {{colors.outline_variant.default.hex}};
+@define-color sidebar_backdrop_color {{colors.surface_container_lowest.default.hex}};

@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+swayimg \
+  --gallery \
+  --appid="swayimg-floating" \
+  -e '
+    -- Completely transparent background
+    swayimg.gallery.window_color = 0x00000000
+    swayimg.gallery.selected_color = 0x00000000
+    swayimg.gallery.unselected_color = 0x00000000
+    swayimg.gallery.border_color = 0x00000000
+    swayimg.gallery.border_size = 0
+
+    -- No text/UI overlay
+    swayimg.text.visible = false
+
+    -- WASD
+    swayimg.gallery.on_key("w", function() swayimg.gallery.select("up") end)
+    swayimg.gallery.on_key("a", function() swayimg.gallery.select("left") end)
+    swayimg.gallery.on_key("s", function() swayimg.gallery.select("down") end)
+    swayimg.gallery.on_key("d", function() swayimg.gallery.select("right") end)
+
+    -- HJKL
+    swayimg.gallery.on_key("h", function() swayimg.gallery.select("left") end)
+    swayimg.gallery.on_key("j", function() swayimg.gallery.select("down") end)
+    swayimg.gallery.on_key("k", function() swayimg.gallery.select("up") end)
+    swayimg.gallery.on_key("l", function() swayimg.gallery.select("right") end)
+
+    -- Space = select wallpaper
+    swayimg.gallery.on_key("space", function()
+        local img = swayimg.gallery.get_image()
+        if img then
+            os.execute("switch-wallpaper " .. string.format("%q", img.path))
+            swayimg.exit()
+        end
+    end)
+
+    -- Escape = exit
+    swayimg.gallery.on_key("Escape", function()
+        swayimg.exit()
+    end)
+  ' \
+  "$HOME/Pictures/Wallpapers"

@@ -1,0 +1,49 @@
+animations {
+     workspace-switch {
+     spring damping-ratio=1.0 stiffness=900 epsilon=0.0001
+     }
+     window-movement {
+          spring damping-ratio=0.95 stiffness=500 epsilon=0.0001
+      }
+     horizontal-view-movement {
+         spring damping-ratio=0.9 stiffness=500 epsilon=0.0001
+     }
+
+  window-resize {
+    custom-shader r"
+        vec4 resize_color(vec3 coords_curr_geo, vec3 size_curr_geo) {
+            vec3 coords_tex_prev = niri_geo_to_tex_prev * coords_curr_geo;
+            vec4 color_prev = texture2D(niri_tex_prev, coords_tex_prev.st);
+
+            vec3 coords_tex_next = niri_geo_to_tex_next * coords_curr_geo;
+            vec4 color_next = texture2D(niri_tex_next, coords_tex_next.st);
+
+            return mix(color_prev, color_next, niri_clamped_progress);
+        }
+    "
+}
+    window-open {
+        duration-ms 200
+        curve "ease-out-quad"
+        custom-shader r"
+            vec4 open_color(vec3 coords_geo, vec3 size_geo) {
+                vec3 coords_tex = niri_geo_to_tex * coords_geo;
+                vec4 color = texture2D(niri_tex, coords_tex.st);
+                color *= niri_clamped_progress;
+                return color;
+            }
+        "
+    }
+    window-close {
+        duration-ms 200
+        curve "ease-out-quad"
+        custom-shader r"
+            vec4 close_color(vec3 coords_geo, vec3 size_geo) {
+                vec3 coords_tex = niri_geo_to_tex * coords_geo;
+                vec4 color = texture2D(niri_tex, coords_tex.st);
+                color *= (1.0 - niri_clamped_progress);
+                return color;
+            }
+        "
+    }
+}

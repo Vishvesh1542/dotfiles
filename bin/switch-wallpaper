@@ -1,0 +1,96 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+WALLPAPER="${1:?Usage: $0 /path/to/wallpaper.jpg}"
+WAYBAR_COLORS_FILE="$HOME/.config/waybar/waybar-colors.css"
+
+matugen image "$WALLPAPER" --source-color-index 0
+
+cp $WALLPAPER $HOME/.config/background.png
+PRIMARY_HEX="$(grep -oP '(@define-color\s+primary\s+|--primary:\s*)\K#[0-9a-fA-F]{6}' "$WAYBAR_COLORS_FILE" | head -n1)"
+
+if [[ -z "$PRIMARY_HEX" ]]; then
+  echo "Could not find primary color in $WAYBAR_COLORS_FILE" >&2
+  exit 1
+fi
+echo "Primary color: $PRIMARY_HEX"
+
+declare -A ACCENT_REFS=(
+  [blue]="#3f8ae5 #438de6 #a4caee"
+  [green]="#26a269 #39ac76 #81d5ad"
+  [orange]="#f17738 #ff7800 #ffc994"
+  [pink]="#e4358a #e64392 #f9b3d5"
+  [purple]="#954ab5 #9c46b9 #d099d6"
+  [red]="#e84053 #e01b24 #f2a1a5"
+  [slate]="#557b9f #6a8daf #b4c6d6"
+  [teal]="#129eb0 #2190a4 #7bdff4"
+  [yellow]="#cbac10 #d4b411 #f5c211"
+)
+
+closest_accent() {
+  python3 - "$PRIMARY_HEX" "${!ACCENT_REFS[@]}" -- "${ACCENT_REFS[@]}" <<'PYEOF'
+import sys
+
+def hex_to_rgb(h):
+    h = h.lstrip('#')
+    return tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+
+def redmean(c1, c2):
+    r1, g1, b1 = c1
+    r2, g2, b2 = c2
+    rmean = (r1 + r2) / 2
+    dr, dg, db = r1 - r2, g1 - g2, b1 - b2
+    return ((2 + rmean/256) * dr**2 + 4 * dg**2 + (2 + (255 - rmean)/256) * db**2) ** 0.5
+
+target_hex = sys.argv[1]
+names, refs, seen_sep = [], [], False
+for a in sys.argv[2:]:
+    if a == "--":
+        seen_sep = True
+        continue
+    (names if not seen_sep else refs).append(a if not seen_sep else a.split())
+
+target = hex_to_rgb(target_hex)
+best_name, best_dist = None, float("inf")
+for name, colors in zip(names, refs):
+    for c in colors:
+        d = redmean(target, hex_to_rgb(c))
+        if d < best_dist:
+            best_dist, best_name = d, name
+
+print(best_name)
+PYEOF
+}
+
+ACCENT="$(closest_accent)"
+echo "Closest accent: $ACCENT"
+
+icon_theme_for_accent() {
+  echo "Adwaita-${1}"
+}
+
+ICON_THEME="$(icon_theme_for_accent "$ACCENT")"
+
+icon_theme_installed() {
+  local theme="$1"
+  for dir in "$HOME/.local/share/icons/$theme" "$HOME/.icons/$theme" "/usr/share/icons/$theme"; do
+    [[ -d "$dir" ]] && return 0
+  done
+  return 1
+}
+
+if ! icon_theme_installed "$ICON_THEME"; then
+  echo "Icon theme '$ICON_THEME' not installed, skipping icon-theme switch." >&2
+else
+  CURRENT_ICON_THEME="$(gsettings get org.gnome.desktop.interface icon-theme | tr -d "'")"
+  if [[ "$CURRENT_ICON_THEME" != "$ICON_THEME" ]]; then
+    echo "Setting icon theme: $ICON_THEME"
+    gsettings set org.gnome.desktop.interface icon-theme "$ICON_THEME"
+  fi
+fi
+
+CURRENT_ACCENT="$(gsettings get org.gnome.desktop.interface accent-color | tr -d "'")"
+if [[ "$CURRENT_ACCENT" != "$ACCENT" ]]; then
+  echo "Setting accent color: $ACCENT"
+  gsettings set org.gnome.desktop.interface accent-color "$ACCENT"
+fi

@@ -1,0 +1,19 @@
+#!/usr/bin/bash
+log() { echo -e "\033[1;32m==>\033[0m $*"; }
+log "Checking and installing snapper.."
+sudo pacman -S --needed inotify-tools
+yay -S --needed --noconfirm limine-snapper-sync limine-mkinitcpio-hook
+sudo snapper -c root create-config /
+
+log "Copying snapper-root-config"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+sudo cp "$SCRIPT_DIR/snapper-root-config" /etc/snapper/configs/root
+
+log "Disabling btrfs quotas on /..."
+sudo btrfs quota disable / 2>/dev/null || true
+
+log "Enabling snapper-cleanup.timer..."
+sudo systemctl enable --now snapper-cleanup.timer
+
+log "Enabling limine-snapper-sync.service..."
+sudo systemctl enable --now limine-snapper-sync.service

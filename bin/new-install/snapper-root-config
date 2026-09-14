@@ -1,0 +1,36 @@
+# /etc/snapper/configs/root
+#
+# Omarchy-style config: no automatic timeline snapshots, snapshots are taken
+# on demand (via omarchy-snapshot create) and automatically before updates.
+# Cleanup happens by count, not by a timeline schedule.
+
+SUBVOLUME="/"
+FSTYPE="btrfs"
+
+# No hourly/daily automatic snapshots — Omarchy takes snapshots on demand
+# and before updates instead, so a busy machine doesn't fill up with
+# meaningless hourly noise.
+TIMELINE_CREATE="no"
+TIMELINE_CLEANUP="no"
+
+# Compare pre/post snapshots in the background so `snapper status` works,
+# without slowing down the snapshot operation itself.
+BACKGROUND_COMPARISON="yes"
+
+# Since TIMELINE_CLEANUP is off, prune by raw count instead. This runs via
+# snapper-cleanup.timer. Adjust NUMBER_LIMIT to taste — more snapshots means
+# more disk space used, especially with quotas disabled.
+NUMBER_CLEANUP="yes"
+NUMBER_MIN_AGE="1800"
+NUMBER_LIMIT="20"
+NUMBER_LIMIT_IMPORTANT="10"
+
+# Who can run `snapper` for this config without going through sudo.
+# Leave empty — Omarchy manages this entirely as root via sudo.
+ALLOW_USERS=""
+ALLOW_GROUPS=""
+SYNC_ACL="no"
+
+# No empty-pre-post-pair cleanup needed since we're not diffing on a timer.
+EMPTY_PRE_POST_CLEANUP="yes"
+EMPTY_PRE_POST_MIN_AGE="1800"

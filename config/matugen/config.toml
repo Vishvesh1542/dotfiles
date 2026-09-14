@@ -1,0 +1,57 @@
+[config]
+
+[config.wallpaper]
+set=true
+pre_hook = "pkill swaybg || true" 
+command="swaybg -m fill -i {{image}} & disown"
+
+[templates.gtk3]
+input_path = '~/.config/matugen/templates/gtk.css'
+output_path = '~/.config/gtk-3.0/gtk.css'
+post_hook = 'gsettings set org.gnome.desktop.interface gtk-theme ""; gsettings set org.gnome.desktop.interface gtk-theme adw-gtk3-{{mode}}'
+
+[templates.gtk4]
+input_path = '~/.config/matugen/templates/gtk.css'
+output_path = '~/.config/gtk-4.0/gtk.css'
+post_hook = 'toggle-dark-mode && toggle-dark-mode'
+
+[templates.waybar]
+input_path = '~/.config/matugen/templates/waybar.css'
+output_path = '~/.config/waybar/waybar-colors.css'
+post_hook = 'pkill -SIGUSR2 waybar'
+
+[templates.alacritty]
+input_path = '~/.config/matugen/templates/alacritty.toml'
+output_path = '~/.config/alacritty/alacritty-colors.toml'
+
+[templates.fish]
+input_path = '~/.config/matugen/templates/fish.fish'
+output_path = '~/.config/fish/conf.d/matugen-colors.fish'
+
+[templates.swayosd]
+pre_hook = "pkill swayosd-server || true"
+input_path = '~/.config/matugen/templates/swayosd.css'
+output_path = '~/.config/swayosd/swayosd-colors.css'
+post_hook = "swayosd-server & disown"
+
+[templates.mako]
+input_path = '~/.config/matugen/templates/mako.conf'
+output_path = '~/.config/mako/colors.conf'
+post_hook = 'makoctl reload'
+
+[templates.zen_userchrome]
+input_path = '~/.config/matugen/templates/zen-userchrome.css'
+output_path = '~/.config/zen/suw0ddgu.Default (release)/chrome/userChrome.css'
+
+[templates.zen_usercontent]
+input_path = '~/.config/matugen/templates/zen-usercontent.css'
+output_path = '~/.config/zen/suw0ddgu.Default (release)/chrome/userContent.css'
+ 
+[templates.niri]
+input_path = '~/.config/matugen/templates/niri.kdl'
+output_path = '~/.config/niri/colors.kdl'
+
+[templates.neovim]
+input_path = "~/.config/matugen/templates/nvim.json"
+output_path = "~/.config/nvim/colors.json"
+post_hook = "pkill -SIGUSR1 nvim"

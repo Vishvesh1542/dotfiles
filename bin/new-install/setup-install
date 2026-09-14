@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# ---- Authenticate sudo once, keep it alive in background ----
+gum style --foreground 99 "This script needs sudo access."
+sudo -v
+
+( while true; do sudo -n true; sleep 60; done ) &
+SUDO_KEEPALIVE_PID=$!
+
+
+# ---- Function: install yay if missing ----
+install_yay() {
+    if command -v yay &>/dev/null; then
+        return 0
+    fi
+    gum style --foreground 214 "yay not found. Installing it now..."
+    sudo pacman -S --needed --noconfirm base-devel git
+    local tmpdir
+    tmpdir=$(mktemp -d)
+    git clone https://aur.archlinux.org/yay.git "$tmpdir/yay"
+    (
+        cd "$tmpdir/yay"
+        makepkg -si --noconfirm
+    )
+    rm -rf "$tmpdir"
+    gum style --foreground 82 "✔ yay installed."
+}
+
+# ---- Discover install-* files ----
+mapfile -t lists < <(find . -maxdepth 1 -type f -name "install-*" -printf "%f\n")
+if [[ ${#lists[@]} -eq 0 ]]; then
+    gum style --foreground 196 "No install-* files found here."
+    exit 1
+fi
+selected_lists=$(printf "%s\n" "${lists[@]}" | gum choose --no-limit --header "Select lists to install:")
+if [[ -z "$selected_lists" ]]; then
+    gum style --foreground 196 "Nothing selected. Exiting."
+    exit 0
+fi
+
+# ---- Build a combined "pkg -> source list" map ----
+declare -A pkg_source
+all_pkgs=()
+while IFS= read -r list; do
+    while IFS= read -r pkg; do
+        [[ -z "$pkg" || "$pkg" == \#* ]] && continue
+        all_pkgs+=("$pkg")
+        pkg_source["$pkg"]="$list"
+    done < "$list"
+done <<< "$selected_lists"
+if [[ ${#all_pkgs[@]} -eq 0 ]]; then
+    gum style --foreground 196 "Selected list(s) are empty."
+    exit 0
+fi
+
+
+# ---- Show every package, pre-selected, let the user deselect ----
+preselected=$(printf "%s\n" "${all_pkgs[@]}" | paste -sd, -)
+final_pkgs=$(printf "%s\n" "${all_pkgs[@]}" | \
+    gum choose --no-limit --selected="$preselected" \
+    --header "Deselect anything you don't want:")
+if [[ -z "$final_pkgs" ]]; then
+    gum style --foreground 196 "Nothing selected. Exiting."
+    exit 0
+fi
+count=$(wc -l <<< "$final_pkgs")
+gum style --border normal --padding "1 2" --foreground 99 "$final_pkgs"
+if ! gum confirm "Install these $count package(s)?"; then
+    gum style --foreground 196 "Cancelled."
+    exit 0
+fi
+
+
+# ---- Install: plain, full output, no spinners ----
+while IFS= read -r pkg; do
+    list="${pkg_source[$pkg]}"
+
+    if [[ "$list" == "install-aur" ]]; then
+        install_yay
+        gum style --foreground 99 "→ Installing $pkg (AUR)..."
+        yay -S --needed --removemake --noconfirm \
+            --answerclean None --answerdiff None \
+            --answeredit None --answerupgrade None \
+            "$pkg"
+    else
+        gum style --foreground 99 "→ Installing $pkg..."
+        sudo pacman -S --needed --noconfirm "$pkg"
+    fi
+done <<< "$final_pkgs"
+
+gum style --foreground 82 --bold "✔ All done."

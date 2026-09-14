@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG="root"
+
+usage() {
+  cat <<EOF
+Usage: snapshot <command> [args]
+
+Commands:
+  create [description]   Take a snapshot of / right now
+  list                    List existing snapshots
+  restore [number]        Roll / back to a snapshot (omit number to pick interactively)
+  prune                   Run the NUMBER cleanup algorithm now
+EOF
+  exit 1
+}
+
+cmd_create() {
+  local desc="${1}"
+  echo "Creating snapshot: $desc"
+  local num
+  num=$(sudo snapper -c "$CONFIG" create --description "$desc" --print-number)
+  echo "Created snapshot #$num"
+}
+
+cmd_list() {
+  sudo snapper -c "$CONFIG" list
+}
+
+cmd_prune() {
+  echo "Running cleanup (number algorithm) on config '$CONFIG'..."
+  sudo snapper -c "$CONFIG" cleanup number
+}
+
+cmd_restore() {
+  local num="${1:-}"
+
+  if [[ -z "$num" ]]; then
+    echo "Available snapshots:"
+    cmd_list
+    read -rp "Snapshot number to restore: " num
+  fi
+
+  [[ "$num" =~ ^[0-9]+$ ]] || {
+    echo "Not a valid snapshot number: $num" >&2
+    exit 1
+  }
+
+  echo
+  echo "This will roll / back to snapshot #$num on next boot."
+  echo "Your /home is NOT touched — this only affects the root filesystem."
+  read -rp "Type 'yes' to continue: " confirm
+  [[ "$confirm" == "yes" ]] || {
+    echo "Aborted."
+    exit 1
+  }
+
+  sudo snapper -c "$CONFIG" rollback "$num"
+  echo "Rollback staged. Reboot to complete the restore."
+}
+
+[[ $# -ge 1 ]] || usage
+
+case "$1" in
+create)
+  shift
+  cmd_create "${1:-}"
+  ;;
+list) cmd_list ;;
+restore)
+  shift
+  cmd_restore "${1:-}"
+  ;;
+prune) cmd_prune ;;
+*) usage ;;
+esac

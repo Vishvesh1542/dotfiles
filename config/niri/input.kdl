@@ -1,0 +1,21 @@
+input {
+    keyboard {
+        xkb {
+            options "caps:escape"
+        }
+        numlock
+    }
+    touchpad {
+        tap
+        natural-scroll
+    }
+
+    warp-mouse-to-focus
+    focus-follows-mouse max-scroll-amount="0%"
+}
+
+gestures {
+	hot-corners {
+		off
+	}
+}

@@ -1,0 +1,44 @@
+@import "swayosd-colors.css";
+
+window {
+  border-radius: 0;
+  opacity: 0.97;
+  border: 2px solid @border-color;
+
+  background-color: @background-color;
+}
+
+label {
+  font-family: 'JetBrainsMono Nerd Font';
+  font-size: 11pt;
+
+  color: @label;
+}
+
+image {
+  color: @image;
+}
+
+progressbar {
+  min-height: 6px;
+  border-radius: 0;
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+trough {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  padding: 0;
+  background-color: @trough;
+}
+
+progress {
+  min-height: inherit;
+  border-radius: inherit;
+  border: none;
+  padding: 0;
+  background-color: @progress;
+}
